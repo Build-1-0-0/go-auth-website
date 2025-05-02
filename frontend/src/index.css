@@ -1,0 +1,85 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+.home-page {
+  @apply min-h-screen p-8 max-w-6xl mx-auto;
+}
+
+.hero {
+  @apply text-center py-20;
+}
+
+.hero h1 {
+  @apply text-4xl font-bold mb-4;
+}
+
+.hero p {
+  @apply text-xl mb-8;
+}
+
+.cta-buttons {
+  @apply flex gap-4 justify-center;
+}
+
+.button {
+  @apply px-6 py-3 rounded-lg font-medium transition-colors;
+}
+
+.button.primary {
+  @apply bg-primary text-white hover:bg-primary-dark;
+}
+
+.button.secondary {
+  @apply bg-secondary text-white hover:bg-secondary-dark;
+}
+
+.features {
+  @apply grid md:grid-cols-3 gap-8 mt-16;
+}
+
+.feature-card {
+  @apply p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow;
+}
+
+.dashboard-page {
+  @apply min-h-screen p-8 max-w-6xl mx-auto;
+}
+
+.dashboard-header {
+  @apply flex justify-between items-center mb-12;
+}
+
+.dashboard-header h1 {
+  @apply text-3xl font-bold;
+}
+
+.logout-button {
+  @apply px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600;
+}
+
+.profile-section {
+  @apply mb-12 p-6 bg-gray-50 rounded-lg;
+}
+
+.profile-section h2 {
+  @apply text-2xl font-semibold mb-4;
+}
+
+.profile-details {
+  @apply space-y-2;
+}
+
+.dashboard-content {
+  @apply grid md:grid-cols-2 gap-8;
+}
+
+.dashboard-card {
+  @apply p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow;
+}
+
+.error-message {
+  @apply p-4 mb-6 bg-red-100 text-red-700 rounded;
+}
