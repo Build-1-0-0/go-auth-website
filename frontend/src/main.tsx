@@ -2,78 +2,82 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import App from './App';
 import './index.css';
 
-// Initialize the React application
-async function initializeApp() {
-  // Load any critical app data before render if needed
-  // await loadCriticalData();
-}
-
-initializeApp().then(() => {
-  ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </BrowserRouter>
-    </React.StrictMode>
-  );
-});
-
-// Error boundary for the root component (optional)
-type ErrorBoundaryProps = {
-  children: React.ReactNode;
+// Performance monitoring
+const initPerformanceMonitoring = () => {
+  if (import.meta.env.PROD) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(console.log);
+      getFID(console.log);
+      getFCP(console.log);
+      getLCP(console.log);
+      getTTFB(console.log);
+    });
+  }
 };
 
-type ErrorBoundaryState = {
-  hasError: boolean;
-  error?: Error;
+// Error tracking (Sentry example)
+const initErrorTracking = async () => {
+  if (import.meta.env.PROD) {
+    const Sentry = await import('@sentry/react');
+    Sentry.init({
+      dsn: import.meta.env.VITE_SENTRY_DSN,
+      integrations: [new Sentry.BrowserTracing()],
+      tracesSampleRate: 1.0,
+    });
+  }
 };
 
-class RootErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
+// Theme initialization
+const initTheme = () => {
+  const savedTheme = localStorage.getItem('theme') || 
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.classList.add(savedTheme);
+};
+
+async function bootstrapApplication() {
+  // 1. Initialize theme
+  initTheme();
+
+  // 2. Initialize monitoring
+  if (import.meta.env.PROD) {
+    await initErrorTracking();
+    initPerformanceMonitoring();
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Root boundary caught error:', error, errorInfo);
-    // You can log errors to an error reporting service here
-    // logErrorToService(error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="error-fallback">
-          <h1>Something went wrong</h1>
-          <p>{this.state.error?.message}</p>
-          <button onClick={() => window.location.reload()}>Refresh Page</button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
+  // 3. Load critical app data if needed
+  // await loadEssentialData();
 }
 
-// If you want to add error boundary, wrap it around the BrowserRouter
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <React.StrictMode>
-//     <RootErrorBoundary>
-//       <BrowserRouter>
-//         <AuthProvider>
-//           <App />
-//         </AuthProvider>
-//       </BrowserRouter>
-//     </RootErrorBoundary>
-//   </React.StrictMode>
-// );
+bootstrapApplication()
+  .then(() => {
+    const root = ReactDOM.createRoot(
+      document.getElementById('root') as HTMLElement
+    );
+
+    root.render(
+      <React.StrictMode>
+        <BrowserRouter>
+          <ErrorBoundary>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </React.StrictMode>
+    );
+  })
+  .catch((error) => {
+    console.error('Application bootstrap failed:', error);
+    document.getElementById('root')!.innerHTML = `
+      <div class="error-boundary">
+        <h1>Application Error</h1>
+        <p>Failed to initialize the application.</p>
+        <button onclick="window.location.reload()">Try Again</button>
+      </div>
+    `;
+  });
