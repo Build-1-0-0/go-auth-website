@@ -1,0 +1,17 @@
+# This should be in your BACKEND directory (not frontend)
+name = "go-auth-website"
+main = "src/index.ts"
+compatibility_date = "2024-05-01"
+
+[build]
+command = "npm run build"
+upload = "dist"  # Your compiled Worker files
+
+[[d1_databases]]
+binding = "DB"
+database_name = "go-auth-website"
+database_id = "ef2719c9-959a-42f2-83d4-46d318f0bf61"
+
+[[kv_namespaces]]
+binding = "AUTH_KV"
+id = "36f4562fa8e14a92b81aa627279f6d74"
