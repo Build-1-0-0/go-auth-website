@@ -1,17 +1,28 @@
 // src/components/auth/ProtectedRoute.tsx
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import Unauthorized from '../errors/Unauthorized';
 
-export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+interface ProtectedRouteProps {
+  children: React.ReactElement;
+  requiredRole?: string;
+}
+
+export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner fullPage />;
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return <Unauthorized />;
   }
 
   return children;
-};
+}
