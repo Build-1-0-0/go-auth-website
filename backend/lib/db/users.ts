@@ -39,21 +39,6 @@ export const createUser = async (
 };
 
 // Additional useful functions
-export const getUserByEmail = async (
-  email: string,
-  env: Env
-): Promise<{ id: string; email: string; password_hash: string } | null> => {
-  const result = await env.DB.prepare(
-    'SELECT id, email, password_hash FROM users WHERE email = ?'
-  ).bind(email).first();
-  
-  return result ? {
-    id: result.id as string,
-    email: result.email as string,
-    password_hash: result.password_hash as string
-  } : null;
-};
-
 export const getUserById = async (
   id: string,
   env: Env
