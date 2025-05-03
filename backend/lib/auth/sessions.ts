@@ -1,20 +1,14 @@
+import type { Env } from '@src/types/env';
 import { nanoid } from 'nanoid';
-import type { Env } from '../../types/env';
 
-export const createSession = async (
-  userId: string,
-  env: Env
-): Promise<string> => {
-  const sessionId = nanoid(32);
-  await env.KV.put(`session:${sessionId}`, userId, {
-    expirationTtl: 60 * 60 * 24 * 7, // 1 week
-  });
+export const createSession = async (db: D1Database, userId: string): Promise<string> => {
+  const sessionId = nanoid();
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 1 week
+
+  await db
+    .prepare('INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)')
+    .bind(sessionId, userId, expiresAt.toISOString())
+    .run();
+
   return sessionId;
-};
-
-export const validateSession = async (
-  sessionId: string,
-  env: Env
-): Promise<string | null> => {
-  return await env.KV.get(`session:${sessionId}`);
 };
