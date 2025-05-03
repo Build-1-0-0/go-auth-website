@@ -1,5 +1,5 @@
 name = "go-auth-website"
-main = "src/index.ts"
+main = "dist/worker.js"
 compatibility_date = "2025-05-03"
 
 [[d1_databases]]
@@ -12,4 +12,4 @@ binding = "AUTH_KV"
 id = "36f4562fa8e14a92b81aa627279f6d74"
 
 [vars]
-SESSION_SECRET = "32323232323232323232"
+# SESSION_SECRET should NOT be here if stored as a secret
