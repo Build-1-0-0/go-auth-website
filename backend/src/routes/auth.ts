@@ -23,7 +23,7 @@ auth.post('/register', async (c) => {
   }
 
   // Create user
-  const hashedPassword = await hashPassword(password);
+  const hashedPassword = await hashPassword(password, c.env);
   const user = await createUser(c.env, { email, password: hashedPassword });
 
   // Create session
