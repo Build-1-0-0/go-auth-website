@@ -1,9 +1,8 @@
 import { Hono } from 'hono';
-import type { Env } from '../types/env';
+import type { Env } from '@src/types/env';
 
-const users = new Hono<{ Bindings: Env }>();
+const users = new Hono<Env>();
 
-// Example routes
 users.get('/', async (c) => {
   return c.json({ message: 'Users endpoint' });
 });
