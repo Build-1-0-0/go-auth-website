@@ -1,23 +1,15 @@
-import { argon2id } from '@noble/hashes/argon2';
+import { scrypt } from '@noble/hashes/scrypt';
+import { bytesToHex } from '@noble/hashes/utils';
 import type { Env } from '@src/types/env';
 
 export const hashPassword = async (password: string, env: Env): Promise<string> => {
-  const secret = new TextEncoder().encode(env.SESSION_SECRET);
-  return argon2id(password, secret, {
-    t: 2, // Iterations
-    m: 19456, // Memory in KB
-    p: 1, // Parallelism
-    dkLen: 32 // Key length
-  }).toString('hex');
+  const salt = new TextEncoder().encode(env.SESSION_SECRET);
+  const key = scrypt(password, salt, { N: 2 ** 14, r: 8, p: 1, dkLen: 32 });
+  return bytesToHex(key);
 };
 
 export const verifyPassword = async (hash: string, password: string, env: Env): Promise<boolean> => {
-  const secret = new TextEncoder().encode(env.SESSION_SECRET);
-  const computedHash = argon2id(password, secret, {
-    t: 2,
-    m: 19456,
-    p: 1,
-    dkLen: 32
-  }).toString('hex');
-  return hash === computedHash;
+  const salt = new TextEncoder().encode(env.SESSION_SECRET);
+  const key = scrypt(password, salt, { N: 2 ** 14, r: 8, p: 1, dkLen: 32 });
+  return bytesToHex(key) === hash;
 };
