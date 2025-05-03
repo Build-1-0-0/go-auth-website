@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { hashPassword } from '@lib/auth/passwords';
-import { createSession } from '@lib/auth/sessions';
+import { createSession, getSession } from '@lib/auth/sessions';
 import { createUser, getUserByEmail } from '@lib/db/users';
 import { validate } from '@lib/utils/validation';
 import type { Env } from '@src/types/env';
@@ -36,6 +36,15 @@ auth.post('/register', async (c) => {
     },
     201
   );
+});
+
+auth.get('/session/:id', async (c) => {
+  const sessionId = c.req.param('id');
+  const session = await getSession(c.env, sessionId);
+  if (!session) {
+    return c.json({ error: 'Invalid or expired session' }, 401);
+  }
+  return c.json({ userId: session.userId });
 });
 
 export default auth;
