@@ -1,6 +1,6 @@
 // src/contexts/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AuthService } from '../api/authService';
+import { AuthService } from '../../api/authService';
 import { AuthContextType, User } from '../@types/auth';
 
 const AuthContext = createContext<AuthContextType | null>(null);
