@@ -17,22 +17,25 @@ auth.post('/register', async (c) => {
   }
 
   // Check if user exists
-  const existingUser = await getUserByEmail(c.env.DB, email);
+  const existingUser = await getUserByEmail(c.env, email);
   if (existingUser) {
     return c.json({ error: 'User already exists' }, 409);
   }
 
   // Create user
   const hashedPassword = await hashPassword(password);
-  const user = await createUser(c.env.DB, { email, password: hashedPassword });
+  const user = await createUser(c.env, { email, password: hashedPassword });
 
   // Create session
-  const sessionId = await createSession(c.env.DB, user.id);
+  const sessionId = await createSession(c.env, user.id);
 
-  return c.json({
-    user: { id: user.id, email: user.email },
-    sessionId
-  }, 201);
+  return c.json(
+    {
+      user: { id: user.id, email: user.email },
+      sessionId
+    },
+    201
+  );
 });
 
 export default auth;
