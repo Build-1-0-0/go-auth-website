@@ -10,44 +10,45 @@ const api = axios.create({
   },
 });
 
-export const AuthService = {
-  async register(email: string, password: string): Promise<ApiResponse<User>> {
+export class AuthService {
+  static async register(email: string, password: string): Promise<ApiResponse<User>> {
     try {
       const response: AxiosResponse<User> = await api.post('/register', { email, password });
       return { data: response.data, status: response.status };
     } catch (error: any) {
-      return this.handleError(error);
+      return AuthService.handleError(error);
     }
-  },
+  }
 
-  async login(email: string, password: string): Promise<ApiResponse<User>> {
+  static async login(email: string, password: string): Promise<ApiResponse<User>> {
     try {
       const response: AxiosResponse<User> = await api.post('/login', { email, password });
       return { data: response.data, status: response.status };
     } catch (error: any) {
-      return this.handleError(error);
+      return AuthService.handleError(error);
     }
-  },
+  }
 
-  async logout(): Promise<ApiResponse> {
+  static async logout(): Promise<ApiResponse> {
     try {
       const response = await api.post('/logout');
       return { status: response.status };
     } catch (error: any) {
-      return this.handleError(error);
+      return AuthService.handleError(error);
     }
-  },
+  }
 
-  async getProfile(): Promise<ApiResponse<User>> {
+  static async getProfile(): Promise<ApiResponse<User>> {
     try {
       const response: AxiosResponse<User> = await api.get('/me');
       return { data: response.data, status: response.status };
     } catch (error: any) {
-      return this.handleError(error);
+      return AuthService.handleError(error);
     }
-  },
+  }
 
-  private handleError(error: any): ApiResponse {
+  // Static method to handle errors
+  private static handleError(error: any): ApiResponse {
     if (axios.isAxiosError(error)) {
       return {
         error: error.response?.data?.error || error.message,
@@ -58,5 +59,5 @@ export const AuthService = {
       error: 'An unexpected error occurred',
       status: 500,
     };
-  },
-};
+  }
+}
