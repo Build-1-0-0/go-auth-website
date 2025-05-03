@@ -1,63 +1,36 @@
 import type { Env } from '@src/types/env';
-import type { User, UserInput } from '@src/types/user';
 
-export const getUserByEmail = async (
-  email: string,
-  env: Env
-): Promise<User | null> => {
-  try {
-    const stmt = env.DB.prepare(
-      'SELECT id, email, password_hash, created_at FROM users WHERE email = ?'
-    ).bind(email);
-    
-    const result = await stmt.first<User>();
-    return result || null;
-  } catch (error) {
-    console.error('Error fetching user by email:', error);
-    throw new Error('Failed to fetch user');
-  }
-};
+export interface User {
+  id: string;
+  email: string;
+  password: string;
+  created_at: string;
+}
 
-export const createUser = async (
-  user: UserInput,
-  env: Env
-): Promise<string> => {
-  try {
-    const userId = crypto.randomUUID();
-    const created_at = new Date().toISOString();
-    
-    const stmt = env.DB.prepare(
-      'INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)'
-    ).bind(userId, user.email, user.password_hash, created_at);
-    
-    await stmt.run();
-    return userId;
-  } catch (error) {
-    console.error('Error creating user:', error);
+export interface UserInput {
+  email: string;
+  password: string;
+}
+
+export const createUser = async (env: Env, input: UserInput): Promise<User> => {
+  const id = crypto.randomUUID();
+  const created_at = new Date().toISOString();
+
+  const stmt = env.DB.prepare(
+    'INSERT INTO users (id, email, password, created_at) VALUES (?, ?, ?, ?) RETURNING *'
+  );
+  const result = await stmt.bind(id, input.email, input.password, created_at).first<User>();
+
+  if (!result) {
     throw new Error('Failed to create user');
   }
+
+  return result;
 };
 
-// Additional useful functions
-export const getUserById = async (
-  id: string,
-  env: Env
-): Promise<User | null> => {
-  const stmt = env.DB.prepare(
-    'SELECT id, email, password_hash, created_at FROM users WHERE id = ?'
-  ).bind(id);
-  
-  return await stmt.first<User>();
-};
+export const getUserByEmail = async (env: Env, email: string): Promise<User | null> => {
+  const stmt = env.DB.prepare('SELECT * FROM users WHERE email = ?');
+  const result = await stmt.bind(email).first<User>();
 
-export const deleteUser = async (
-  id: string,
-  env: Env
-): Promise<boolean> => {
-  const stmt = env.DB.prepare(
-    'DELETE FROM users WHERE id = ?'
-  ).bind(id);
-  
-  const { success } = await stmt.run();
-  return success;
+  return result || null;
 };
