@@ -1,25 +1,29 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 export default defineConfig({
+  root: '.', // Root contains index.html
   plugins: [react()],
   build: {
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        assetFileNames: 'assets/[name]-[hash][extname]',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-      }
-    }
+    outDir: 'dist',
+    emptyOutDir: true,
+  },
+  resolve: {
+    alias: {
+      '/src': resolve(__dirname, 'frontend/src'), // Point /src/ to frontend/src/
+    },
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'https://go-auth-website.africancontent807.workers.dev',
+      '/auth': {
+        target: 'https://go-auth-website.africancontent807@gmail.com.workers.dev',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      }
-    }
-  }
-})
+      },
+      '/protected': {
+        target: 'https://go-auth-website.africancontent807@gmail.com.workers.dev',
+        changeOrigin: true,
+      },
+    },
+  },
+});
