@@ -14,4 +14,4 @@ declare global {
   }
 }
 
-export {}; // Treat as module
+export {};
