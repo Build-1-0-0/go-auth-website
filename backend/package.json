@@ -2,10 +2,9 @@
   "name": "auth-worker",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "build": "tsc && esbuild src/index.ts --bundle --platform=neutral --outfile=dist/worker.js",
-    "deploy": "npm run build && wrangler deploy",
-    "typecheck": "tsc --noEmit"
+    "build": "tsc && esbuild src/index.ts --bundle --platform=neutral --outfile=dist/worker.js --format=esm",
+    "dev": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "argon2": "^0.43.0",
