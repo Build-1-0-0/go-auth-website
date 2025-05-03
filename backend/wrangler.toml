@@ -1,5 +1,5 @@
 name = "go-auth-website"
-main = "src/index.ts"
+main = "dist/worker.js"
 compatibility_date = "2025-05-03"
 
 [build]
