@@ -1,6 +1,6 @@
 # This should be in your BACKEND directory (not frontend)
 name = "go-auth-website"
-main = "./index.ts"
+main = "src/index.ts"
 compatibility_date = "2024-05-01"
 
 [build]
