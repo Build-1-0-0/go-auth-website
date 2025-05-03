@@ -1,11 +1,9 @@
 {
   "scripts": {
-    "build": "bun run build:ts && bun run build:worker",
-    "build:ts": "tsc -p tsconfig.json --emitDeclarationOnly",
-    "build:worker": "bun build ./src/index.ts --outfile ./dist/worker.js --target browser --format esm --minify --sourcemap",
+    "build": "tsc -p tsconfig.json --noEmit",
     "dev": "wrangler dev",
     "type-check": "tsc -p tsconfig.json --noEmit",
-    "deploy": "bun run build && ls -l dist && bunx wrangler deploy"
+    "deploy": "bunx wrangler deploy"
   },
   "dependencies": {
     "@noble/hashes": "^1.8.0",
