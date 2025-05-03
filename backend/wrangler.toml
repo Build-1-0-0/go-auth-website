@@ -11,3 +11,5 @@ database_id = "ef2719c9-959a-42f2-83d4-46d318f0bf61"
 binding = "AUTH_KV"
 id = "36f4562fa8e14a92b81aa627279f6d74"
 
+[vars]
+# SESSION_SECRET is stored as a secret, not hardcoded
