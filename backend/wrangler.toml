@@ -1,11 +1,9 @@
-# This should be in your BACKEND directory (not frontend)
 name = "go-auth-website"
-main = "src/index.ts"
+main = "dist/worker.js"
 compatibility_date = "2024-05-01"
 
 [build]
 command = "npm run build"
-upload = "dist"  # Your compiled Worker files
 
 [[d1_databases]]
 binding = "DB"
