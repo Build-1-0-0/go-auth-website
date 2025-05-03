@@ -2,7 +2,7 @@
   "scripts": {
     "build": "bun run build:ts && bun run build:worker",
     "build:ts": "tsc -p tsconfig.json --emitDeclarationOnly",
-    "build:worker": "bun build ./src/index.ts --outfile ./dist/worker.js --target browser --format esm --minify --sourcemap",
+    "build:worker": "wrangler publish --dry-run --outdir dist",
     "dev": "wrangler dev",
     "type-check": "tsc -p tsconfig.json --noEmit",
     "deploy": "bunx wrangler deploy"
