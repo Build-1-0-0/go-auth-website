@@ -1,23 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ESNext",                         // Modern JS features
-    "module": "ESNext",                         // ESM for Workers compatibility
-    "moduleResolution": "bundler",              // Recommended for Bun + ESM
-    "lib": ["DOM", "ESNext"],                   // Web + latest features
-    "strict": true,                             // Enable all strict checks
-    "skipLibCheck": true,                       // Skip type checking of node_modules
-    "types": ["@cloudflare/workers-types"],     // Cloudflare Workers globals
-    "esModuleInterop": true,                    // Better CommonJS interop
-    "forceConsistentCasingInFileNames": true,   // Prevent casing issues
-    "allowSyntheticDefaultImports": true,       // Allow default imports from CJS
-    "outDir": "./dist",                         // Compiled output folder
-    "rootDir": ".",                             // Consider both `src` and `lib`
-    "baseUrl": ".",                             // Enable path aliases
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["DOM", "ESNext"],
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["@cloudflare/workers-types"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,                       // <-- required for emitDeclarationOnly
+    "emitDeclarationOnly": true,               // <-- this now works
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"],
       "@lib/*": ["lib/*"]
-    },
-    "noEmit": true                              // For type-checking only (build handled by Bun)
+    }
   },
   "include": ["src/**/*", "lib/**/*", "types/**/*"],
   "exclude": ["node_modules", "dist"]
