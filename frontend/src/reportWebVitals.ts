@@ -1,13 +1,19 @@
-import { onCLS, onFID, onLCP, onTTFB, onINP } from 'web-vitals';
+import {
+  getCLS,
+  getFID,
+  getFCP,
+  getLCP,
+  getTTFB,
+  getINP,
+} from 'web-vitals';
 
-function sendToAnalytics(metric: any) {
-  console.log('[Web Vitals]', metric);
-  // Optionally send to an analytics endpoint:
-  // fetch('/analytics', { method: 'POST', body: JSON.stringify(metric) });
+export default function reportWebVitals(onReport?: (metric: any) => void) {
+  const handler = onReport || console.log;
+
+  getCLS(handler);
+  getFID(handler);
+  getFCP(handler);
+  getLCP(handler);
+  getTTFB(handler);
+  getINP(handler);
 }
-
-onCLS(sendToAnalytics);
-onFID(sendToAnalytics);
-onLCP(sendToAnalytics);
-onTTFB(sendToAnalytics);
-onINP(sendToAnalytics);
