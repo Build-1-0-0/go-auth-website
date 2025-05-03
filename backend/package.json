@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy",
+    "build": "tsc && esbuild src/index.ts --bundle --platform=neutral --outfile=dist/worker.js",
+    "deploy": "npm run build && wrangler deploy",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
