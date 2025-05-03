@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import type { Env } from '@src/types/env';
 
 export interface User {
@@ -13,7 +14,7 @@ export interface UserInput {
 }
 
 export const createUser = async (env: Env, input: UserInput): Promise<User> => {
-  const id = crypto.randomUUID();
+  const id = nanoid();
   const created_at = new Date().toISOString();
 
   const stmt = env.DB.prepare(
