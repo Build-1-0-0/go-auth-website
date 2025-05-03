@@ -14,6 +14,8 @@ jobs:
         run: bun install
       - name: Build
         run: bun run build
+      - name: Verify Build Output
+        run: ls -l dist
       - name: Deploy
         run: bunx wrangler deploy
         env:
