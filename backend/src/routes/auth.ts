@@ -1,31 +1,38 @@
 import { Hono } from 'hono';
-import { hashPassword, verifyPassword } from '../../../lib/auth/passwords';
-import { createSession } from '../../../lib/auth/sessions';
-import { getUserByEmail } from '../../../lib/db/users';
-import { validate } from '../../../lib/utils/validation';
+import { hashPassword, verifyPassword } from '@lib/auth/passwords';
+import { createSession } from '@lib/auth/sessions';
+import { createUser, getUserByEmail } from '@lib/db/users';
+import { validate } from '@lib/utils/validation';
+import type { Env } from '@src/types/env';
 
-export const authRoutes = new Hono<{ Bindings: Env }>()
+const auth = new Hono<Env>();
 
-authRoutes.post('/register', async (c) => {
+auth.post('/register', async (c) => {
   const { email, password } = await c.req.json();
   
   // Validate input
-  if (!validate.email(email) || !validate.password(password)) {
-    return c.json({ error: 'Invalid input' }, 400);
+  const validation = validate({ email, password });
+  if (!validation.valid) {
+    return c.json({ error: validation.errors }, 400);
   }
 
   // Check if user exists
-  if (await getUserByEmail(email, c.env)) {
+  const existingUser = await getUserByEmail(c.env.DB, email);
+  if (existingUser) {
     return c.json({ error: 'User already exists' }, 409);
   }
 
   // Create user
-  const passwordHash = await hashPassword(password);
-  const userId = await createUser({ email, password_hash: passwordHash }, c.env);
+  const hashedPassword = await hashPassword(password);
+  const user = await createUser(c.env.DB, { email, password: hashedPassword });
 
-  return c.json({ userId }, 201);
+  // Create session
+  const sessionId = await createSession(c.env.DB, user.id);
+  
+  return c.json({ 
+    user: { id: user.id, email: user.email },
+    sessionId 
+  });
 });
 
-authRoutes.post('/login', async (c) => {
-  // ... similar modular approach
-});
+export default auth;
