@@ -35,8 +35,8 @@ const initErrorTracking = async () => {
 // Theme initialization
 const initTheme = () => {
   const savedTheme = localStorage.getItem('theme') || 
-    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  document.documentElement.classList.add(savedTheme);
+  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+ document.documentElement.classList.add(savedTheme);
 };
 
 async function bootstrapApplication() {
