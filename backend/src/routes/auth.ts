@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import { hashPassword, verifyPassword } from '../lib/auth/passwords';
-import { createSession } from '../lib/auth/sessions';
-import { getUserByEmail } from '../lib/db/users';
-import { validate } from '../lib/utils/validation';
+import { hashPassword, verifyPassword } from '../../../lib/auth/passwords';
+import { createSession } from '../../../lib/auth/sessions';
+import { getUserByEmail } from '../../../lib/db/users';
+import { validate } from '../../../lib/utils/validation';
 
 export const authRoutes = new Hono<{ Bindings: Env }>()
 
