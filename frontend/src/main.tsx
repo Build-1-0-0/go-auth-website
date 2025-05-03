@@ -6,51 +6,39 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import App from './App';
 import './index.css';
+import reportWebVitals from './reportWebVitals';
 
-// Performance monitoring
-const initPerformanceMonitoring = () => {
-  if (import.meta.env.PROD) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(console.log);
-      getFID(console.log);
-      getFCP(console.log);
-      getLCP(console.log);
-      getTTFB(console.log);
-    });
-  }
-};
-
-// Error tracking (Sentry example)
 const initErrorTracking = async () => {
   if (import.meta.env.PROD) {
     const Sentry = await import('@sentry/react');
+    const { BrowserTracing } = await import('@sentry/tracing');
+
     Sentry.init({
       dsn: import.meta.env.VITE_SENTRY_DSN,
-      integrations: [new Sentry.BrowserTracing()],
+      integrations: [new BrowserTracing()],
       tracesSampleRate: 1.0,
     });
   }
 };
 
-// Theme initialization
 const initTheme = () => {
-  const savedTheme = localStorage.getItem('theme') || 
-  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
- document.documentElement.classList.add(savedTheme);
+  const savedTheme =
+    localStorage.getItem('theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light');
+  document.documentElement.classList.add(savedTheme);
 };
 
 async function bootstrapApplication() {
-  // 1. Initialize theme
+  // Initialize theme
   initTheme();
 
-  // 2. Initialize monitoring
+  // Initialize monitoring and error tracking
   if (import.meta.env.PROD) {
     await initErrorTracking();
-    initPerformanceMonitoring();
+    reportWebVitals();
   }
-
-  // 3. Load critical app data if needed
-  // await loadEssentialData();
 }
 
 bootstrapApplication()
