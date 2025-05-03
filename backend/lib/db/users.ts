@@ -1,37 +1,40 @@
-import { nanoid } from 'nanoid';
 import type { Env } from '@src/types/env';
+import { nanoid } from 'nanoid';
 
 export interface User {
   id: string;
   email: string;
   password: string;
-  created_at: string;
 }
 
-export interface UserInput {
-  email: string;
-  password: string;
-}
-
-export const createUser = async (env: Env, input: UserInput): Promise<User> => {
+export const createUser = async (env: Env, user: Omit<User, 'id'>): Promise<User> => {
   const id = nanoid();
-  const created_at = new Date().toISOString();
+  const createdUser = { id, ...user };
 
-  const stmt = env.DB.prepare(
-    'INSERT INTO users (id, email, password, created_at) VALUES (?, ?, ?, ?) RETURNING *'
-  );
-  const result = await stmt.bind(id, input.email, input.password, created_at).first<User>();
+  await env.DB.prepare(`
+    INSERT INTO users (id, email, password)
+    VALUES (?, ?, ?)
+  `).bind(id, user.email, user.password).run();
 
-  if (!result) {
-    throw new Error('Failed to create user');
-  }
-
-  return result;
+  return createdUser;
 };
 
 export const getUserByEmail = async (env: Env, email: string): Promise<User | null> => {
-  const stmt = env.DB.prepare('SELECT * FROM users WHERE email = ?');
-  const result = await stmt.bind(email).first<User>();
+  const result = await env.DB.prepare(`
+    SELECT id, email, password
+    FROM users
+    WHERE email = ?
+  `).bind(email).first<User>();
+
+  return result || null;
+};
+
+export const getUserById = async (env: Env, id: string): Promise<User | null> => {
+  const result = await env.DB.prepare(`
+    SELECT id, email, password
+    FROM users
+    WHERE id = ?
+  `).bind(id).first<User>();
 
   return result || null;
 };
