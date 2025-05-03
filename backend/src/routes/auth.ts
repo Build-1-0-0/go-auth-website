@@ -5,7 +5,7 @@ import { createUser, getUserByEmail } from '@lib/db/users';
 import { validate } from '@lib/utils/validation';
 import type { Env } from '@src/types/env';
 
-const auth = new Hono<Env>();
+const auth = new Hono<{ Bindings: Env }>();
 
 auth.post('/register', async (c) => {
   const { email, password } = await c.req.json();
