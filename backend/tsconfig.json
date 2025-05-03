@@ -2,24 +2,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["DOM", "ESNext"],
+    "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
     "types": ["@cloudflare/workers-types"],
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,                       // <-- required for emitDeclarationOnly
-    "emitDeclarationOnly": true,               // <-- this now works
-    "outDir": "./dist",
-    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"],
-      "@lib/*": ["lib/*"]
-    }
+      "@lib/*": ["lib/*"],
+      "@src/*": ["src/*"]
+    },
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "."
   },
-  "include": ["src/**/*", "lib/**/*", "types/**/*"],
+  "include": ["src/**/*", "lib/**/*"],
   "exclude": ["node_modules", "dist"]
 }
