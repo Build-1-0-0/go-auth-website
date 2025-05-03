@@ -2,19 +2,18 @@
   "scripts": {
     "build": "bun run build:ts && bun run build:worker",
     "build:ts": "tsc -p tsconfig.json --emitDeclarationOnly",
-    "build:worker": "bun build ./src/index.ts --outfile ./dist/worker.js --target bun --format esm --minify",
+    "build:worker": "bun build ./src/index.ts --outfile ./dist/worker.js --target browser --format esm --minify --sourcemap",
     "dev": "wrangler dev",
     "type-check": "tsc -p tsconfig.json --noEmit",
     "deploy": "bunx wrangler deploy"
   },
   "dependencies": {
-    "argon2": "^0.43.0",
+    "@noble/hashes": "^1.8.0",
     "hono": "^4.7.8",
     "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250503.0",
-    "@types/argon2": "^0.15.4",
     "typescript": "^5.8.3",
     "wrangler": "^4.14.1"
   }
