@@ -4,7 +4,8 @@
     "build:ts": "tsc -p tsconfig.json --emitDeclarationOnly",
     "build:worker": "bun build ./src/index.ts --outfile ./dist/worker.js --target bun --format esm --minify",
     "dev": "wrangler dev",
-    "type-check": "tsc -p tsconfig.json --noEmit"
+    "type-check": "tsc -p tsconfig.json --noEmit",
+    "deploy": "bunx wrangler deploy"
   },
   "dependencies": {
     "argon2": "^0.43.0",
