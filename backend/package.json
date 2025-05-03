@@ -2,9 +2,10 @@
   "name": "auth-worker",
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --minify",
-    "dev": "wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "build": "bun run build:ts && bun run build:worker",
+    "build:ts": "tsc --emitDeclarationOnly",
+    "build:worker": "bun build ./src/index.ts --outfile ./dist/worker.js --target bun --format esm --minify",
+    "dev": "wrangler dev"
   },
   "dependencies": {
     "argon2": "^0.43.0",
