@@ -1,19 +1,20 @@
-import {
-  getCLS,
-  getFID,
-  getFCP,
-  getLCP,
-  getTTFB,
-  getINP,
-} from 'web-vitals';
+// frontend/src/reportWebVitals.ts
 
-export default function reportWebVitals(onReport?: (metric: any) => void) {
-  const handler = onReport || console.log;
+import { ReportHandler } from 'web-vitals';
+import { getCLS } from 'web-vitals/getCLS';
+import { getFID } from 'web-vitals/getFID';
+import { getFCP } from 'web-vitals/getFCP';
+import { getLCP } from 'web-vitals/getLCP';
+import { getTTFB } from 'web-vitals/getTTFB';
 
-  getCLS(handler);
-  getFID(handler);
-  getFCP(handler);
-  getLCP(handler);
-  getTTFB(handler);
-  getINP(handler);
-}
+const reportWebVitals = (onPerfEntry?: ReportHandler) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    getCLS(onPerfEntry);
+    getFID(onPerfEntry);
+    getFCP(onPerfEntry);
+    getLCP(onPerfEntry);
+    getTTFB(onPerfEntry);
+  }
+};
+
+export default reportWebVitals;
