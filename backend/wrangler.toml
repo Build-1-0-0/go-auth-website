@@ -1,9 +1,9 @@
 name = "go-auth-website"
 main = "dist/worker.js"
-compatibility_date = "2024-05-01"
+compatibility_date = "2025-05-03"
 
 [build]
-command = "npm run build"
+command = "bun run build"
 
 [[d1_databases]]
 binding = "DB"
@@ -13,3 +13,6 @@ database_id = "ef2719c9-959a-42f2-83d4-46d318f0bf61"
 [[kv_namespaces]]
 binding = "AUTH_KV"
 id = "36f4562fa8e14a92b81aa627279f6d74"
+
+[vars]
+SESSION_SECRET = "your-session-secret"
