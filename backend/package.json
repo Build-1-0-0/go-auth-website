@@ -2,7 +2,7 @@
   "name": "auth-worker",
   "type": "module",
   "scripts": {
-    "build": "tsc && esbuild src/index.ts --bundle --platform=neutral --outfile=dist/worker.js --format=esm",
+    "build": "tsc --noEmit && esbuild src/index.ts --bundle --platform=neutral --outfile=dist/worker.js --format=esm",
     "dev": "wrangler dev",
     "deploy": "npm run build && wrangler deploy"
   },
