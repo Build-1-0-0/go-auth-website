@@ -1,11 +1,5 @@
-// frontend/src/reportWebVitals.ts
-
 import { ReportHandler } from 'web-vitals';
-import { getCLS } from 'web-vitals/getCLS';
-import { getFID } from 'web-vitals/getFID';
-import { getFCP } from 'web-vitals/getFCP';
-import { getLCP } from 'web-vitals/getLCP';
-import { getTTFB } from 'web-vitals/getTTFB';
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
