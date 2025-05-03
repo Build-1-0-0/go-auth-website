@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { hashPassword, verifyPassword } from '@lib/auth/passwords';
+import { hashPassword } from '@lib/auth/passwords';
 import { createSession } from '@lib/auth/sessions';
 import { createUser, getUserByEmail } from '@lib/db/users';
 import { validate } from '@lib/utils/validation';
@@ -9,7 +9,7 @@ const auth = new Hono<Env>();
 
 auth.post('/register', async (c) => {
   const { email, password } = await c.req.json();
-  
+
   // Validate input
   const validation = validate({ email, password });
   if (!validation.valid) {
@@ -28,11 +28,11 @@ auth.post('/register', async (c) => {
 
   // Create session
   const sessionId = await createSession(c.env.DB, user.id);
-  
-  return c.json({ 
+
+  return c.json({
     user: { id: user.id, email: user.email },
-    sessionId 
-  });
+    sessionId
+  }, 201);
 });
 
 export default auth;
