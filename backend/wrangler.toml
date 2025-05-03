@@ -12,4 +12,4 @@ binding = "AUTH_KV"
 id = "36f4562fa8e14a92b81aa627279f6d74"
 
 [vars]
-SESSION_SECRET = "your-session-secret"
+SESSION_SECRET = "32323232323232323232"
