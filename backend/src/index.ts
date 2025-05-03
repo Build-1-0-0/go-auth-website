@@ -1,13 +1,12 @@
 import { Hono } from 'hono';
-import authRoutes from '@src/routes/auth';
-import userRoutes from '@src/routes/users';
-import type { Env } from '@src/types/env';
+import auth from './routes/auth';
+import protectedRoutes from './routes/protected';
+import type { Env } from './types/env';
 
 const app = new Hono<{ Bindings: Env }>();
 
-app.route('/auth', authRoutes);
-app.route('/users', userRoutes);
-
 app.get('/', (c) => c.text('API Running'));
+app.route('/auth', auth);
+app.route('/protected', protectedRoutes);
 
 export default app;
