@@ -4,23 +4,23 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
 export default defineConfig({
-  root: '.', // Root contains index.html
+  root: '..', // Point to root/ where index.html is
   plugins: [react()],
   build: {
-    outDir: 'dist',
+    outDir: 'dist', // Output to root/dist
     emptyOutDir: true,
     sourcemap: true, // For Sentry
   },
+  publicDir: 'public', // Point to root/public
   resolve: {
     alias: {
-      // Use relative alias to avoid absolute path issues
       '@': resolve(__dirname, 'src'), // Maps @ to frontend/src
     },
   },
   server: {
     proxy: {
       '/auth': {
-        target: 'https://go-auth-website.africancontent807.workers.dev', // Fix URL
+        target: 'https://go-auth-website.africancontent807.workers.dev',
         changeOrigin: true,
       },
       '/protected': {
