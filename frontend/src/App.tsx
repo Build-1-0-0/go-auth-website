@@ -13,7 +13,7 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const NotFound = lazy(() => import('./components/errors/NotFound'));
-const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
+const ProtectedRoute = lazy(() => import('./components/auth/ProtectedRoute'));
 const Unauthorized = lazy(() => import('./components/errors/Unauthorized'));
 
 function App() {
