@@ -1,49 +1,82 @@
-// src/contexts/AuthContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AuthService } from '../api/authService';
-import { AuthContextType, User } from '../@types/auth';
+// frontend/src/contexts/AuthContext.tsx
+import { createContext, useContext, useState, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const AuthContext = createContext<AuthContextType | null>(null);
+interface AuthContextType {
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  isAuthenticated: boolean;
+}
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+interface LoginResponse {
+  token: string;
+  user?: { id: string; email: string; name?: string };
+}
 
-  useEffect(() => {
-    initializeAuth();
-  }, []);
+export interface ApiResponse {
+  error?: string;
+}
 
-  const initializeAuth = async () => {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL as string;
+
+  const login = async (email: string, password: string) => {
     try {
-      const { data } = await AuthService.getProfile();
-      setUser(data || null);
-    } catch {
-      setUser(null);
-    } finally {
-      setLoading(false);
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        const errorData: ApiResponse = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Login failed: ${response.status}`);
+      }
+      const data: LoginResponse = await response.json();
+      localStorage.setItem('token', data.token);
+      setIsAuthenticated(true);
+      navigate('/dashboard');
+    } catch (err) {
+      throw err; // Let useAuthActions handle the error
     }
   };
 
-  const login = async (email: string, password: string) => {
-    const { data } = await AuthService.login(email, password);
-    setUser(data || null);
-  };
-
   const register = async (email: string, password: string) => {
-    await AuthService.register(email, password);
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        const errorData: ApiResponse = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Registration failed: ${response.status}`);
+      }
+      const data: LoginResponse = await response.json();
+      localStorage.setItem('token', data.token);
+      setIsAuthenticated(true);
+      navigate('/dashboard');
+    } catch (err) {
+      throw err;
+    }
   };
 
-  const logout = async () => {
-    await AuthService.logout();
-    setUser(null);
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ login, register, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
