@@ -1,3 +1,4 @@
+// backend/package.json
 {
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
@@ -8,8 +9,7 @@
   "dependencies": {
     "@noble/hashes": "^1.8.0",
     "hono": "^4.7.8",
-    "nanoid": "^5.1.5",
-    "@hono/cors": "^0.0.1"
+    "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250503.0",
