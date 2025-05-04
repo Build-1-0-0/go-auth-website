@@ -1,10 +1,9 @@
 // frontend/src/components/layout/Header.tsx
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Header() {
   const { user, logout } = useAuth();
-
   return (
     <header className="bg-gray-900 text-white py-4">
       <div className="container mx-auto flex justify-between items-center px-4">
