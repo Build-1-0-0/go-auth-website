@@ -1,4 +1,4 @@
-// src/main.tsx
+// frontend/src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,7 +9,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 const initErrorTracking = async () => {
-  if (import.meta.env.PROD) {
+  // Only run in browser (client-side)
+  if (import.meta.env.PROD && typeof window !== 'undefined') {
     const Sentry = await import('@sentry/react');
     const { BrowserTracing } = await import('@sentry/tracing');
 
