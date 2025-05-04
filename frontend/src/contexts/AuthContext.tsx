@@ -9,9 +9,9 @@ interface AuthContextType {
   isAuthenticated: boolean;
 }
 
-interface LoginResponse {
-  token: string;
-  user?: { id: string; email: string; name?: string };
+interface AuthResponse {
+  user: { id: string; email: string };
+  sessionId: string;
 }
 
 export interface ApiResponse {
@@ -21,7 +21,7 @@ export interface ApiResponse {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('sessionId'));
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -36,12 +36,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const errorData: ApiResponse = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `Login failed: ${response.status}`);
       }
-      const data: LoginResponse = await response.json();
-      localStorage.setItem('token', data.token);
+      const data: AuthResponse = await response.json();
+      localStorage.setItem('sessionId', data.sessionId);
       setIsAuthenticated(true);
       navigate('/dashboard');
     } catch (err) {
-      throw err; // Let useAuthActions handle the error
+      throw err;
     }
   };
 
@@ -56,8 +56,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const errorData: ApiResponse = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `Registration failed: ${response.status}`);
       }
-      const data: LoginResponse = await response.json();
-      localStorage.setItem('token', data.token);
+      const data: AuthResponse = await response.json();
+      localStorage.setItem('sessionId', data.sessionId);
       setIsAuthenticated(true);
       navigate('/dashboard');
     } catch (err) {
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('sessionId');
     setIsAuthenticated(false);
     navigate('/login');
   };
