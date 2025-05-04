@@ -9,16 +9,24 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 const initErrorTracking = async () => {
-  // Only run in browser (client-side)
   if (import.meta.env.PROD && typeof window !== 'undefined') {
-    const Sentry = await import('@sentry/react');
-    const { BrowserTracing } = await import('@sentry/tracing');
-
-    Sentry.init({
-      dsn: import.meta.env.VITE_SENTRY_DSN,
-      integrations: [new BrowserTracing()],
-      tracesSampleRate: 1.0,
-    });
+    try {
+      const Sentry = await import('@sentry/react');
+      const { BrowserTracing } = await import('@sentry/browser');
+      const dsn = import.meta.env.VITE_SENTRY_DSN;
+      if (!dsn) {
+        console.warn('VITE_SENTRY_DSN is not set. Skipping Sentry initialization.');
+        return;
+      }
+      Sentry.init({
+        dsn,
+        integrations: [new BrowserTracing()],
+        tracesSampleRate: 1.0,
+      });
+      console.log('Sentry initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Sentry:', error);
+    }
   }
 };
 
@@ -32,13 +40,15 @@ const initTheme = () => {
 };
 
 async function bootstrapApplication() {
-  // Initialize theme
-  initTheme();
-
-  // Initialize monitoring and error tracking
-  if (import.meta.env.PROD) {
-    await initErrorTracking();
-    reportWebVitals();
+  try {
+    initTheme();
+    if (import.meta.env.PROD) {
+      await initErrorTracking();
+      reportWebVitals();
+    }
+  } catch (error) {
+    console.error('Bootstrap initialization failed:', error);
+    throw error;
   }
 }
 
