@@ -1,4 +1,4 @@
-// src/App.tsx
+// frontend/src/App.tsx
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
@@ -6,13 +6,15 @@ import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import Layout from './components/layout/Layout';
 
-// Lazy-loaded pages
+// Lazy-loaded pages and components
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const NotFound = lazy(() => import('./components/errors/NotFound'));
+const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
+const Unauthorized = lazy(() => import('./components/errors/Unauthorized'));
 
 function App() {
   return (
@@ -26,17 +28,22 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
 
               {/* Protected Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              } />
-
-              <Route path="/profile" element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              } />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute requiredRole="user">
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Error Routes */}
               <Route path="/unauthorized" element={<Unauthorized />} />
