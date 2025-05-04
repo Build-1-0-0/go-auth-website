@@ -14,7 +14,7 @@ export const useAuthActions = () => {
       return true;
     } catch (error) {
       const err = error instanceof Error ? { error: error.message } : (error as ApiResponse);
-      setMessage({ text: err.error || 'Login failed', type: 'error' });
+      setMessage({ text: err.error || 'Login failed. Please try again.', type: 'error' });
       return false;
     }
   };
@@ -26,7 +26,7 @@ export const useAuthActions = () => {
       return true;
     } catch (error) {
       const err = error instanceof Error ? { error: error.message } : (error as ApiResponse);
-      setMessage({ text: err.error || 'Registration failed', type: 'error' });
+      setMessage({ text: err.error || 'Registration failed. Please try again.', type: 'error' });
       return false;
     }
   };
