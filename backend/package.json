@@ -3,12 +3,13 @@
     "build": "tsc -p tsconfig.json --noEmit",
     "dev": "wrangler dev",
     "type-check": "tsc -p tsconfig.json --noEmit",
-    "deploy": "bunx wrangler deploy"
+    "deploy": "npx wrangler deploy"
   },
   "dependencies": {
     "@noble/hashes": "^1.8.0",
     "hono": "^4.7.8",
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.5",
+    "@hono/cors": "^4.7.8"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250503.0",
