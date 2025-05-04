@@ -1,4 +1,4 @@
-// src/hooks/useAuthActions.ts
+// frontend/src/hooks/useAuthActions.ts
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ApiResponse } from '../@types/auth';
@@ -13,7 +13,7 @@ export const useAuthActions = () => {
       setMessage({ text: 'Login successful!', type: 'success' });
       return true;
     } catch (error) {
-      const err = error as ApiResponse;
+      const err = error instanceof Error ? { error: error.message } : (error as ApiResponse);
       setMessage({ text: err.error || 'Login failed', type: 'error' });
       return false;
     }
@@ -25,7 +25,7 @@ export const useAuthActions = () => {
       setMessage({ text: 'Registration successful! Please login.', type: 'success' });
       return true;
     } catch (error) {
-      const err = error as ApiResponse;
+      const err = error instanceof Error ? { error: error.message } : (error as ApiResponse);
       setMessage({ text: err.error || 'Registration failed', type: 'error' });
       return false;
     }
