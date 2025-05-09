@@ -90,4 +90,4 @@ auth.get('/session/:id', async (c) => {
   return c.json({ userId: session.userId });
 });
 
-export default aut
+export default auth;
