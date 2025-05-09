@@ -1,43 +1,57 @@
-/* src/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* frontend/src/index.css */
 
-/* Base styles */
-:root {
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-error: #dc2626;
-  --color-error-light: #fee2e2;
+/* Tailwind Directives - Modern recommended syntax */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Custom Base Styles */
+@layer base {
+  :root {
+    --color-primary: #2563eb;
+    --color-primary-dark: #1d4ed8;
+    --color-error: #dc2626;
+    --color-error-light: #fee2e2;
+  }
+
+  /* Register custom colors for Tailwind */
+  @layer utilities {
+    .text-error { color: var(--color-error) }
+    .bg-primary { background-color: var(--color-primary) }
+    .bg-primary-dark { background-color: var(--color-primary-dark) }
+    .bg-error-light { background-color: var(--color-error-light) }
+  }
 }
 
-/* Error Boundary Styles */
-.error-boundary {
-  @apply min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50 text-center;
+/* Component Styles */
+@layer components {
+  .error-boundary {
+    @apply min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50 text-center;
+  }
+  
+  .error-boundary__title {
+    @apply text-3xl font-bold mb-4 text-error;
+  }
+
+  .error-boundary__message {
+    @apply text-lg mb-6 max-w-2xl;
+  }
+
+  .error-boundary__stack {
+    @apply text-sm text-gray-500 mb-8 p-4 bg-white rounded max-w-2xl w-full overflow-auto;
+  }
+
+  .error-boundary__action {
+    @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors;
+  }
 }
 
-.error-boundary__title {
-  @apply text-3xl font-bold mb-4 text-error;
-}
-
-.error-boundary__message {
-  @apply text-lg mb-6 max-w-2xl;
-}
-
-.error-boundary__stack {
-  @apply text-sm text-gray-500 mb-8 p-4 bg-white rounded max-w-2xl w-full overflow-auto;
-}
-
-.error-boundary__action {
-  @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors;
-}
-
-/* App-wide styles */
+/* Layout Styles */
 #root {
   @apply min-h-screen flex flex-col;
 }
 
-/* Animation for loading states */
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -45,4 +59,4 @@
 
 .fade-in {
   animation: fadeIn 0.3s ease-in;
-  }
+    }
