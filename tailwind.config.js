@@ -1,9 +1,9 @@
-import { type Config } from 'tailwindcss';
-
-const config: Config = {
+// tailwind.config.js
+module.exports = {
   content: [
-    './index.html',
-    './frontend/src/**/*.{js,ts,jsx,tsx}',
+    "./index.html",
+    "./frontend/src/**/*.{js,ts,jsx,tsx}",
+    "./frontend/src/index.css" // Explicitly include CSS file
   ],
   theme: {
     extend: {
@@ -15,37 +15,8 @@ const config: Config = {
       },
     },
   },
-  safelist: [
-    'p-8',
-    'px-6',
-    'py-3',
-    'text-error',
-    'bg-primary',
-    'bg-primary-dark',
-    'text-white',
-    'bg-gray-50',
-    'text-gray-500',
-    'bg-white',
-    'rounded',
-    'rounded-lg',
-    'transition-colors',
-    'text-3xl',
-    'text-lg',
-    'text-sm',
-    'font-bold',
-    'mb-4',
-    'mb-6',
-    'mb-8',
-    'max-w-2xl',
-    'w-full',
-    'overflow-auto',
-    'min-h-screen',
-    'flex',
-    'flex-col',
-    'items-center',
-    'justify-center',
-  ],
+  corePlugins: {
+    preflight: true, // Ensure base styles are loaded
+  },
   plugins: [],
-};
-
-export default config;
+}
