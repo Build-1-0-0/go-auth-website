@@ -1,7 +1,7 @@
-// backend/routes/auth.ts
+// backend/src/routes/auth.ts
 import { Hono } from 'hono';
 import { hashPassword, verifyPassword } from '@lib/auth/passwords';
-import { createSession, getSession } from '@lib/auth/sessions';
+import { createSession, getSession, deleteSession } from '@lib/auth/sessions';
 import { createUser, getUserByEmail } from '@lib/db/users';
 import { validate } from '@lib/utils/validation';
 import type { Env } from '@src/types/env';
@@ -9,10 +9,10 @@ import type { Env } from '@src/types/env';
 const auth = new Hono<{ Bindings: Env }>();
 
 auth.post('/register', async (c) => {
-  const { email, password } = await c.req.json();
+  const { email, password, username } = await c.req.json();
 
   // Validate input
-  const validation = validate({ email, password });
+  const validation = validate({ email, password, username });
   if (!validation.valid) {
     return c.json({ error: validation.errors }, 400);
   }
@@ -25,15 +25,15 @@ auth.post('/register', async (c) => {
 
   // Create user
   const hashedPassword = await hashPassword(password, c.env);
-  const user = await createUser(c.env, { email, password: hashedPassword });
+  const user = await createUser(c.env, { email, username, password: hashedPassword, role: 'user' });
 
   // Create session
   const sessionId = await createSession(c.env, user.id);
 
   return c.json(
     {
-      user: { id: user.id, email: user.email },
-      sessionId
+      user: { id: user.id, email: user.email, username: user.username, role: user.role },
+      sessionId,
     },
     201
   );
@@ -55,7 +55,7 @@ auth.post('/login', async (c) => {
   }
 
   // Verify password
-  const isValid = await verifyPassword(password, user.password, c.env);
+  const isValid = await verifyPassword(password, user.password_hash, c.env);
   if (!isValid) {
     return c.json({ error: 'Invalid credentials' }, 401);
   }
@@ -65,11 +65,20 @@ auth.post('/login', async (c) => {
 
   return c.json(
     {
-      user: { id: user.id, email: user.email },
-      sessionId
+      user: { id: user.id, email: user.email, username: user.username, role: user.role },
+      sessionId,
     },
     200
   );
+});
+
+auth.post('/logout', async (c) => {
+  const sessionId = c.req.header('Authorization')?.replace('Bearer ', '');
+  if (!sessionId) {
+    return c.json({ error: 'Missing session ID' }, 400);
+  }
+  await deleteSession(c.env, sessionId);
+  return c.json({ message: 'Logged out successfully' });
 });
 
 auth.get('/session/:id', async (c) => {
@@ -81,4 +90,4 @@ auth.get('/session/:id', async (c) => {
   return c.json({ userId: session.userId });
 });
 
-export default auth;
+export default aut
