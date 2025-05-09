@@ -1,26 +1,19 @@
-import type { Env } from '@src/types/env';
+// backend/lib/auth/sessions.ts
 import { nanoid } from 'nanoid';
+import type { Env } from '@src/types/env';
 
-export const createSession = async (env: Env, userId: string): Promise<string> => {
+export async function createSession(env: Env, userId: string): Promise<string> {
   const sessionId = nanoid();
-  const expiresAt = Date.now() + 1000 * 60 * 60 * 24 * 7; // 1 week
-
-  await env.AUTH_KV.put(`session:${sessionId}`, JSON.stringify({ userId, expiresAt }), {
-    expiration: Math.floor(expiresAt / 1000)
-  });
-
+  await env.AUTH_KV.put(`session:${sessionId}`, userId, { expirationTtl: 3600 });
   return sessionId;
-};
+}
 
-export const getSession = async (env: Env, sessionId: string): Promise<{ userId: string } | null> => {
-  const session = await env.AUTH_KV.get(`session:${sessionId}`);
-  if (!session) return null;
-
-  const { userId, expiresAt } = JSON.parse(session);
-  if (expiresAt < Date.now()) {
-    await env.AUTH_KV.delete(`session:${sessionId}`);
-    return null;
-  }
-
+export async function getSession(env: Env, sessionId: string): Promise<{ userId: string } | null> {
+  const userId = await env.AUTH_KV.get(`session:${sessionId}`);
+  if (!userId) return null;
   return { userId };
-};
+}
+
+export async function deleteSession(env: Env, sessionId: string): Promise<void> {
+  await env.AUTH_KV.delete(`session:${sessionId}`);
+}
