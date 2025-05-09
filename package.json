@@ -29,6 +29,7 @@
     "tailwindcss": "^4.1.5",
     "postcss": "^8.4.47",
     "autoprefixer": "^10.4.20",
-    "@tailwindcss/postcss": "4.0.0"
+    "@tailwindcss/postcss": "4.0.0",
+    "@tailwindcss/nesting": "0.0.0"
   }
 }
