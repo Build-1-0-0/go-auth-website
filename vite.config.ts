@@ -2,14 +2,16 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import tailwindNesting from '@tailwindcss/nesting';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
-// TailwindCSS and PostCSS integration
 export default defineConfig({
   root: '.',
   plugins: [
     react(),
     sentryVitePlugin({
-      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536', // Replace with your actual Sentry org slug
+      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
       project: 'go-auth-website',
       authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
@@ -40,9 +42,9 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [
-        require('tailwindcss'), // Make sure TailwindCSS is included
-        require('autoprefixer'),  // Auto-prefixing for CSS support
-        require('tailwindcss/nesting'), // For nesting support in TailwindCSS
+        tailwindNesting(),
+        tailwindcss(),
+        autoprefixer(),
       ],
     },
   },
