@@ -1,8 +1,8 @@
 // frontend/src/components/auth/ProtectedRoute.tsx
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '../ui/LoadingSpinner';
-import Unauthorized from '../errors/Unauthorized'; // Verify this path
+import { useAuth } from '@/contexts/AuthContext';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Unauthorized from '@/components/errors/Unauthorized';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
