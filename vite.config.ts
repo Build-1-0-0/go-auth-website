@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// ESM-compatible imports
-import tailwindcss from 'tailwindcss'
+// Updated PostCSS plugin imports
+import tailwindcss from '@tailwindcss/postcss'
 import autoprefixer from 'autoprefixer'
 import postcssNesting from 'postcss-nesting'
 
