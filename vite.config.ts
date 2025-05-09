@@ -1,51 +1,22 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
-import { sentryVitePlugin } from '@sentry/vite-plugin';
-import tailwindNesting from '@tailwindcss/nesting';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  root: '.',
-  plugins: [
-    react(),
-    sentryVitePlugin({
-      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
-      project: 'go-auth-website',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    }),
-  ],
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    sourcemap: true,
-  },
-  publicDir: 'public',
+  plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'frontend/src'),
-    },
-  },
-  server: {
-    proxy: {
-      '/auth': {
-        target: 'https://go-auth-website.africancontent807.workers.dev',
-        changeOrigin: true,
-      },
-      '/protected': {
-        target: 'https://go-auth-website.africancontent807.workers.dev',
-        changeOrigin: true,
-      },
+      '@': path.resolve(__dirname, './src'),
     },
   },
   css: {
     postcss: {
       plugins: [
-        tailwindNesting(),
-        tailwindcss(),
-        autoprefixer(),
+        require('postcss-nesting'), // Use this instead of @tailwindcss/nesting
+        require('tailwindcss'),
+        require('autoprefixer'),
       ],
     },
   },
-});
+})
