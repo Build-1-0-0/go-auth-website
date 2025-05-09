@@ -1,10 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
-  root: '.', // index.html is in the root
-  plugins: [react()],
+  root: '.',
+  plugins: [
+    react(),
+    sentryVitePlugin({
+      org: 'your-sentry-org',
+      project: 'go-auth-website',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
+  ],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
@@ -13,7 +21,7 @@ export default defineConfig({
   publicDir: 'public',
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'frontend/src'), // Point to frontend/src
+      '@': resolve(__dirname, 'frontend/src'),
     },
   },
   server: {
