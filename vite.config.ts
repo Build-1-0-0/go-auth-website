@@ -2,6 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+// ESM-compatible imports
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+import postcssNesting from 'postcss-nesting'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -13,9 +18,9 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [
-        require('postcss-nesting'), // Use this instead of @tailwindcss/nesting
-        require('tailwindcss'),
-        require('autoprefixer'),
+        postcssNesting,
+        tailwindcss,
+        autoprefixer,
       ],
     },
   },
