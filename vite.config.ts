@@ -1,9 +1,9 @@
-// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
+// TailwindCSS and PostCSS integration
 export default defineConfig({
   root: '.',
   plugins: [
@@ -38,6 +38,12 @@ export default defineConfig({
     },
   },
   css: {
-    postcss: './postcss.config.cjs',
+    postcss: {
+      plugins: [
+        require('tailwindcss'), // Make sure TailwindCSS is included
+        require('autoprefixer'),  // Auto-prefixing for CSS support
+        require('tailwindcss/nesting'), // For nesting support in TailwindCSS
+      ],
+    },
   },
 });
