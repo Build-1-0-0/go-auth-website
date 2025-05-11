@@ -13,3 +13,7 @@ id = "36f4562fa8e14a92b81aa627279f6d74"
 
 [vars]
 # SESSION_SECRET is stored as a secret
+
+# wrangler.toml (wrangler v4.14.4^)
+[observability.logs]
+enabled = true
