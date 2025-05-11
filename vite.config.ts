@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [
     react(),
     sentryVitePlugin({
-      org: 'your-sentry-org',
+      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
       project: 'go-auth-website',
       authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
