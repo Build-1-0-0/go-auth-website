@@ -3,8 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
-import tailwindcssPostcssPlugin from '@tailwindcss/postcss'; // Changed import name for clarity
-import autoprefixer from 'autoprefixer';
+import tailwindcss from '@tailwindcss/postcss';
 import postcssNesting from 'postcss-nesting';
 
 export default defineConfig({
@@ -12,15 +11,15 @@ export default defineConfig({
   plugins: [
     react(),
     sentryVitePlugin({
-      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536', // Replace with your Sentry organization
+      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
       project: 'go-auth-website',
-      authToken: process.env.SENTRY_AUTH_TOKEN, // Ensure this is available in your build environment
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
   ],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    sourcemap: true, // Set to true for production source maps if needed by Sentry, false to reduce build size
+    sourcemap: true,
   },
   publicDir: 'public',
   resolve: {
@@ -44,8 +43,7 @@ export default defineConfig({
     postcss: {
       plugins: [
         postcssNesting(),
-        tailwindcssPostcssPlugin({ config: resolve(__dirname, 'tailwind.config.js') }), // Use absolute path
-        autoprefixer(),
+        tailwindcss({ config: './tailwind.config.js' }),
       ],
     },
   },
