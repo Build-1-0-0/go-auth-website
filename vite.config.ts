@@ -44,7 +44,7 @@ export default defineConfig({
     postcss: {
       plugins: [
         postcssNesting(),
-        tailwindcssPostcssPlugin({ config: './tailwind.config.js' }), // Explicitly pass the config path
+        tailwindcssPostcssPlugin({ config: resolve(__dirname, 'tailwind.config.js') }), // Use absolute path
         autoprefixer(),
       ],
     },
