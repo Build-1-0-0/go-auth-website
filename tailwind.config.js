@@ -2,7 +2,7 @@
 export default {
   content: [
     './index.html',
-    './frontend/src/**/*.{js,ts,jsx,tsx}',
+    './frontend/src/**/*.{js,ts,jsx,tsx}', // Ensure this path correctly captures all files using Tailwind classes
   ],
   theme: {
     extend: {
@@ -17,5 +17,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [], // This is fine if you don't have custom plugins
 };
