@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
-import tailwindcss from '@tailwindcss/postcss';
+import tailwindcss from 'tailwindcss'; // Corrected import
 import autoprefixer from 'autoprefixer';
 import postcssNesting from 'postcss-nesting';
 
@@ -12,9 +12,9 @@ export default defineConfig({
   plugins: [
     react(),
     sentryVitePlugin({
-      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
+      org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536', // Remember to replace with your actual Sentry org
       project: 'go-auth-website',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
+      authToken: process.env.SENTRY_AUTH_TOKEN, // Ensure this is set in your build environment
     }),
   ],
   build: {
@@ -42,7 +42,11 @@ export default defineConfig({
   },
   css: {
     postcss: {
-      plugins: [postcssNesting(), tailwindcss(), autoprefixer()],
+      plugins: [
+        postcssNesting(),
+        tailwindcss('./tailwind.config.js'), // Corrected usage and explicitly pass config
+        autoprefixer(),
+      ],
     },
   },
 });
