@@ -1,4 +1,4 @@
-// src/components/ErrorBoundary.tsx
+// frontend/src/components/ErrorBoundary.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,33 +16,29 @@ interface ErrorBoundaryState {
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { 
-      hasError: false, 
+    this.state = {
+      hasError: false,
       error: null,
-      errorInfo: null 
+      errorInfo: null,
     };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    return { 
+    return {
       hasError: true,
-      error 
+      error,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ errorInfo });
-    // Log to error monitoring service
     console.error('Error Boundary caught:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <DefaultErrorFallback 
-          error={this.state.error} 
-          errorInfo={this.state.errorInfo} 
-        />
+        <DefaultErrorFallback error={this.state.error} errorInfo={this.state.errorInfo} />
       );
     }
 
@@ -50,7 +46,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 }
 
-// Default Error Fallback Component
 interface DefaultErrorFallbackProps {
   error: Error | null;
   errorInfo: React.ErrorInfo | null;
@@ -68,17 +63,17 @@ const DefaultErrorFallback: React.FC<DefaultErrorFallbackProps> = ({ error, erro
   };
 
   return (
-    <div className="error-boundary fade-in">
-      <h1 className="error-boundary__title">Something went wrong</h1>
-      
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50 text-center fade-in">
+      <h1 className="text-3xl font-bold mb-4 text-error">Something went wrong</h1>
+
       {error && (
         <>
-          <p className="error-boundary__message">
+          <p className="text-lg mb-6 max-w-2xl">
             {error.message || 'An unexpected error occurred'}
           </p>
-          
+
           {import.meta.env.DEV && errorInfo && (
-            <details className="error-boundary__stack">
+            <details className="text-sm text-gray-500 mb-8 p-4 bg-white rounded max-w-2xl w-full overflow-auto">
               <summary>Error details</summary>
               <pre>{error.stack}</pre>
               <pre>{errorInfo.componentStack}</pre>
@@ -88,15 +83,15 @@ const DefaultErrorFallback: React.FC<DefaultErrorFallbackProps> = ({ error, erro
       )}
 
       <div className="flex gap-4 mt-6">
-        <button 
+        <button
           onClick={handleRefresh}
-          className="error-boundary__action"
+          className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
         >
           Refresh Page
         </button>
-        <button 
+        <button
           onClick={handleGoHome}
-          className="error-boundary__action bg-gray-600 hover:bg-gray-700"
+          className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
         >
           Go to Homepage
         </button>
