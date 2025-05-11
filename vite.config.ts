@@ -10,6 +10,7 @@ export default defineConfig({
   root: '.',
   plugins: [
     react(),
+    tailwindcss({ config: './tailwind.config.js' }), // Moved to Vite plugins
     sentryVitePlugin({
       org: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
       project: 'go-auth-website',
@@ -42,8 +43,7 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [
-        postcssNesting(),
-        tailwindcss({ config: './tailwind.config.js' }),
+        postcssNesting(), // Keep for CSS nesting
       ],
     },
   },
