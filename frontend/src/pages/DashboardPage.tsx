@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { AuthService } from '@/api/authService';
 import { ApiResponse, User } from '@/@types/auth';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export const DashboardPage = () => {
   const { user, logout } = useAuth();
@@ -29,7 +30,7 @@ export const DashboardPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="dashboard-loading text-center py-12 text-foreground">Loading your dashboard...</div>;
+    return <LoadingSpinner fullPage />;
   }
 
   return (
@@ -54,9 +55,7 @@ export const DashboardPage = () => {
           </p>
           <p>
             <strong>Account Created:</strong>{' '}
-            {profile?.createdAt
-              ? new Date(profile.createdAt).toLocaleDateString()
-              : 'N/A'}
+            {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}
           </p>
         </div>
       </div>
