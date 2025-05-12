@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/browser';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import App from './App';
@@ -19,7 +18,7 @@ const initErrorTracking = () => {
     }
     Sentry.init({
       dsn: 'https://b6bb9839b9972fcb7cdf7770bd8ba4a4@o4509252418076672.ingest.de.sentry.io/4509252475027536',
-      integrations: [new BrowserTracing()],
+      integrations: [Sentry.browserTracingIntegration()],
       tracesSampleRate: 1.0,
       tracePropagationTargets: ['localhost', 'https://go-auth-website.africancontent807.workers.dev'],
     });
