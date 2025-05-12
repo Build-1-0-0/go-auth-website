@@ -1,5 +1,6 @@
 // frontend/src/pages/ProfilePage.tsx
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthService } from '@/api/authService';
 import { ApiResponse, User } from '@/@types/auth';
@@ -10,6 +11,7 @@ const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -28,8 +30,22 @@ const ProfilePage: React.FC = () => {
       }
     };
 
-    fetchProfile();
-  }, []);
+    if (user) {
+      fetchProfile();
+    } else {
+      setLoading(false);
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (err) {
+      setError('Failed to logout');
+    }
+  };
 
   if (loading) {
     return <LoadingSpinner fullPage />;
@@ -40,7 +56,7 @@ const ProfilePage: React.FC = () => {
       <header className="profile-header flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-foreground">Your Profile</h1>
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="py-2 px-4 rounded-xs bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-3 focus:ring-primary-dark"
         >
           Logout
@@ -53,7 +69,7 @@ const ProfilePage: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-4 text-foreground">Profile Information</h2>
         <div className="space-y-2 text-foreground">
           <p>
-            <strong>Email:</strong> {user?.email || 'N/A'}
+            <strong>Email:</strong> {profile?.email || 'N/A'}
           </p>
           <p>
             <strong>Account Created:</strong>{' '}
