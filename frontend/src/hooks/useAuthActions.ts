@@ -7,7 +7,6 @@ export const useAuthActions = () => {
   const { login, register } = useAuth();
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  // Clear message after 5 seconds
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => setMessage(null), 5000);
