@@ -29,9 +29,9 @@ export const useAuthActions = () => {
     }
   };
 
-  const handleRegister = async (username: string, email: string, password: string) => {
+  const handleRegister = async (email: string, password: string) => {
     try {
-      await register(username, email, password);
+      await register(email, password);
       setMessage({ text: 'Registration successful! Please login.', type: 'success' });
       return true;
     } catch (error) {
