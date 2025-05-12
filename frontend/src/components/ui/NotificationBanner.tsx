@@ -1,22 +1,22 @@
-// src/components/ui/NotificationBanner.tsx
+// frontend/src/components/ui/NotificationBanner.tsx
 import { useState } from 'react';
 
 export default function NotificationBanner() {
-  const [visible, setVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
 
-  if (!visible) return null;
+  if (!isVisible) return null;
 
   return (
-    <div className="bg-yellow-500 text-black px-4 py-2 text-center relative">
+    <div className="bg-primary text-white py-2 px-4 text-center text-sm fade-in">
       <p>
-        This is an important notification! Stay informed.
+        Welcome to GoAuthWebsite! Check out our <a href="/services" className="underline hover:text-gray-200">services</a>.
       </p>
       <button
-        onClick={() => setVisible(false)}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black hover:text-white"
-        aria-label="Close Notification"
+        onClick={() => setIsVisible(false)}
+        className="ml-2 text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-white"
+        aria-label="Dismiss notification"
       >
-        &times;
+        ✕
       </button>
     </div>
   );
