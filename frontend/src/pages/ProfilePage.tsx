@@ -55,11 +55,6 @@ const ProfilePage: React.FC = () => {
           <p>
             <strong>Email:</strong> {user?.email || 'N/A'}
           </p>
-          {profile?.username && (
-            <p>
-              <strong>Username:</strong> {profile.username}
-            </p>
-          )}
           <p>
             <strong>Account Created:</strong>{' '}
             {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}
