@@ -9,7 +9,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import RegisterPage from '@/pages/RegisterPage';
 import LoginPage from '@/pages/LoginPage';
 import DashboardPage from '@/pages/DashboardPage';
-import About from '@/pages/About';
+import AboutPage from '@/pages/AboutPage';
 
 const HomePage = lazy(() => import('@/pages/HomePage'));
 
