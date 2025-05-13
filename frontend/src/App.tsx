@@ -10,6 +10,9 @@ import RegisterPage from '@/pages/RegisterPage';
 import LoginPage from '@/pages/LoginPage';
 import DashboardPage from '@/pages/DashboardPage';
 import AboutPage from '@/pages/AboutPage';
+import ServicesPage from '@/pages/ServicesPage';
+import ContactPage from '@/pages/ContactPage;
+import PrivacyPolicy from '@/pages/PrivacyPolicy;
 
 const HomePage = lazy(() => import('@/pages/HomePage'));
 
