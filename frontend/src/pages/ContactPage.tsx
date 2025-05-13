@@ -1,61 +1,32 @@
-// frontend/src/pages/Contact.tsx
-export default function Contact() {
+// frontend/src/pages/ServicesPage.tsx
+import React from 'react';
+
+const ServicesPage: React.FC = () => {
   return (
-    <div className="container mx-auto px-4 py-8 fade-in">
-      <h1 className="text-3xl font-bold mb-4 text-foreground">Contact Us</h1>
-      <p className="text-lg mb-6 text-foreground">
-        Have questions or need support? Reach out to us!
-      </p>
-      <form className="max-w-md space-y-4">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            className="w-full border border-gray-200 dark:border-gray-600 rounded-xs px-3 py-2 focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
-            placeholder="Your Name"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full border border-gray-200 dark:border-gray-600 rounded-xs px-3 py-2 focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
-            placeholder="Your Email"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="message"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Message
-          </label>
-          <textarea
-            id="message"
-            className="w-full border border-gray-200 dark:border-gray-600 rounded-xs px-3 py-2 focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
-            rows={4}
-            placeholder="Your Message"
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          className="bg-primary text-white px-4 py-2 rounded-xs hover:bg-primary-dark focus:outline-none focus:ring-3 focus:ring-primary-dark"
-        >
-          Send
-        </button>
-      </form>
+    <div className="services-page max-w-6xl mx-auto py-12 px-4 fade-in">
+      <header className="services-header mb-8">
+        <h1 className="text-3xl font-bold text-foreground">Our Services</h1>
+      </header>
+      <section className="services-content p-6 bg-white dark:bg-gray-800 rounded-xs shadow-xs">
+        <h2 className="text-2xl font-semibold mb-4 text-foreground">Authentication Solutions</h2>
+        <p className="text-foreground mb-4">
+          We provide secure and scalable authentication services powered by Cloudflare Workers and
+          modern web technologies. Our services include:
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-foreground">
+          <li>User registration and login with email and password</li>
+          <li>Secure session management with Cloudflare KV</li>
+          <li>Protected routes for authenticated users</li>
+          <li>Real-time performance monitoring with Sentry</li>
+        </ul>
+        <h2 className="text-2xl font-semibold mt-6 mb-4 text-foreground">Why Choose Us?</h2>
+        <p className="text-foreground">
+          Our platform is built with security, performance, and user experience in mind, leveraging
+          React 19, TypeScript, and Tailwind CSS v4 for a modern and responsive interface.
+        </p>
+      </section>
     </div>
   );
-}
+};
+
+export default ServicesPage;
