@@ -1,21 +1,50 @@
-// backend/index.ts
+// backend/src/index.ts
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { nanoid } from 'nanoid';
 import auth from './routes/auth';
 import protectedRoutes from './routes/protected';
 import type { Env } from './types/env';
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{ Bindings: Env; Variables: { nonce: string } }>();
 
+// CSP Middleware
+app.use('*', async (c, next) => {
+  const nonce = nanoid(16); // Generate secure nonce
+  c.set('nonce', nonce);
+  await next();
+  c.header(
+    'Content-Security-Policy',
+    `
+      default-src 'self';
+      script-src 'self' 'nonce-${nonce}' https://static.cloudflareinsights.com;
+      style-src 'self' 'unsafe-inline';
+      font-src 'self' https://fonts.gstatic.com;
+      connect-src 'self' https://go-auth-website.africancontent807.workers.dev https://sentry.io;
+      img-src 'self' data:;
+      manifest-src 'self';
+      frame-ancestors 'none';
+      form-action 'self';
+      base-uri 'self'
+    `.trim().replace(/\s+/g, ' ')
+  );
+  c.header('X-Content-Type-Options', 'nosniff');
+  c.header('X-Frame-Options', 'DENY');
+  c.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+});
+
+// CORS Middleware
 app.use(
   '*',
   cors({
     origin: ['https://go-auth-website.pages.dev', 'http://localhost:5173'],
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   })
 );
 
+// Routes
 app.get('/', (c) => c.text('API Running'));
 app.route('/auth', auth);
 app.route('/protected', protectedRoutes);
