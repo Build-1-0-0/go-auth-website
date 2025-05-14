@@ -6,7 +6,7 @@ import { User, ApiResponse } from '@/@types/auth';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, username: string) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
 }
@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const register = async (email: string, password: string) => {
-    const response: ApiResponse<User> = await AuthService.register(email, password);
+  const register = async (email: string, password: string, username: string) => {
+    const response: ApiResponse<User> = await AuthService.register(email, password, username);
     if (!response.data) {
       throw new Error(response.error || 'Registration failed');
     }
