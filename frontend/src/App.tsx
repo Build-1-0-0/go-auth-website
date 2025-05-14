@@ -1,4 +1,5 @@
 // frontend/src/App.tsx
+import { Helmet, HelmetProvider } from '@dr.pogodin/react-helmet';
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
