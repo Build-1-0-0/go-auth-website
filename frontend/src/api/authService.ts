@@ -1,62 +1,63 @@
-// frontend/src/api/authService.ts
-import axios, { AxiosResponse } from 'axios';
-import { ApiResponse, User } from '../@types/auth';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { ApiResponse } from '@/@types/auth';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://go-auth-website.africancontent807.workers.dev',
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+export const useAuthActions = () => {
+  const { login, register } = useAuth();
+  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-export class AuthService {
-  static async register(email: string, password: string, username: string = email.split('@')[0]): Promise<ApiResponse<User>> {
-    try {
-      const response: AxiosResponse<User> = await api.post('/auth/register', { email, password, username });
-      return { data: response.data, status: response.status };
-    } catch (error: any) {
-      return AuthService.handleError(error);
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+    if (message) {
+      timer = setTimeout(() => setMessage(null), 5000);
     }
-  }
-
-  static async login(email: string, password: string): Promise<ApiResponse<User>> {
-    try {
-      const response: AxiosResponse<User> = await api.post('/auth/login', { email, password });
-      return { data: response.data, status: response.status };
-    } catch (error: any) {
-      return AuthService.handleError(error);
-    }
-  }
-
-  static async logout(): Promise<ApiResponse> {
-    try {
-      const response = await api.post('/auth/logout');
-      return { status: response.status };
-    } catch (error: any) {
-      return AuthService.handleError(error);
-    }
-  }
-
-  static async getProfile(): Promise<ApiResponse<User>> {
-    try {
-      const response: AxiosResponse<User> = await api.get('/auth/me');
-      return { data: response.data, status: response.status };
-    } catch (error: any) {
-      return AuthService.handleError(error);
-    }
-  }
-
-  private static handleError(error: any): ApiResponse {
-    if (axios.isAxiosError(error)) {
-      return {
-        error: error.response?.data?.error || error.message,
-        status: error.response?.status || 500,
-      };
-    }
-    return {
-      error: 'An unexpected error occurred',
-      status: 500,
+    return () => {
+      if (timer) clearTimeout(timer);
     };
-  }
-}
+  }, [message]);
+
+  const handleLogin = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      await login(email, password);
+      setMessage({ text: 'Login successful!', type: 'success' });
+      return true;
+    } catch (error: unknown) {
+      let errorMessage = 'Login failed. Please try again.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'object' && error !== null && 'error' in error) {
+        errorMessage = (error as ApiResponse).error;
+      }
+      console.error('Login error:', error);
+      setMessage({ text: errorMessage, type: 'error' });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      await register(email, password);
+      setMessage({ text: 'Registration successful! Please login.', type: 'success' });
+      return true;
+    } catch (error: unknown) {
+      let errorMessage = 'Registration failed. Please try again.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'object' && error !== null && 'error' in error) {
+        errorMessage = (error as ApiResponse).error;
+      }
+      console.error('Register error:', error);
+      setMessage({ text: errorMessage, type: 'error' });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { handleLogin, handleRegister, message, isLoading };
+};
