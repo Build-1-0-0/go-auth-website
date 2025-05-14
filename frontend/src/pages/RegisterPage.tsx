@@ -1,16 +1,16 @@
 import { Helmet } from '@dr.pogodin/react-helmet';
 import AuthForm from '@/components/auth/AuthForm';
-import Layout from '@/components/layout/Layout';
+// Layout import is removed as it's no longer used directly here
 
 const RegisterPage: React.FC = () => {
   return (
-    <Layout>
+    <> {/* Using a Fragment as the root element */}
       <Helmet>
         <title>Register - MyApp</title>
         <meta name="description" content="Create a new account to access MyApp." />
       </Helmet>
       <AuthForm isLogin={false} />
-    </Layout>
+    </>
   );
 };
 
