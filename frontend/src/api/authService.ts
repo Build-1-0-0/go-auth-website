@@ -1,67 +1,49 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { ApiResponse } from '@/@types/auth';
+import { User, ApiResponse } from '@/@types/auth';
 
-export const useAuthActions = () => {
-  const { login, register } = useAuth();
-  const navigate = useNavigate();
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
-    if (message) {
-      timer = setTimeout(() => setMessage(null), 5000);
+export const AuthService = {
+  async login(email: string, password: string): Promise<ApiResponse<User>> {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'include',
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Login failed');
     }
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [message]);
+    return data;
+  },
 
-  const handleLogin = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      await login(email, password);
-      setMessage({ text: 'Login successful!', type: 'success' });
-      navigate('/dashboard');
-      return true;
-    } catch (error: unknown) {
-      let errorMessage = 'Login failed. Please try again.';
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === 'object' && error !== null && 'error' in error) {
-        errorMessage = (error as ApiResponse).error || errorMessage;
-      }
-      console.error('Login error:', error);
-      setMessage({ text: errorMessage, type: 'error' });
-      return false;
-    } finally {
-      setIsLoading(false);
+  async register(email: string, password: string, username: string): Promise<ApiResponse<User>> {
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, username }),
+      credentials: 'include',
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Registration failed');
     }
-  };
+    return data;
+  },
 
-  const handleRegister = async (email: string, password: string, username: string) => {
-    setIsLoading(true);
-    try {
-      await register(email, password, username);
-      setMessage({ text: 'Registration successful! Please login.', type: 'success' });
-      navigate('/login');
-      return true;
-    } catch (error: unknown) {
-      let errorMessage = 'Registration failed. Please try again.';
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === 'object' && error !== null && 'error' in error) {
-        errorMessage = (error as ApiResponse).error || errorMessage;
-      }
-      console.error('Register error:', error);
-      setMessage({ text: errorMessage, type: 'error' });
-      return false;
-    } finally {
-      setIsLoading(false);
+  async getProfile(): Promise<ApiResponse<User>> {
+    const response = await fetch('/api/profile', {
+      credentials: 'include',
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to fetch profile');
     }
-  };
+    return data;
+  },
 
-  return { handleLogin, handleRegister, message, isLoading };
+  async logout(): Promise<void> {
+    await fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+  },
 };
