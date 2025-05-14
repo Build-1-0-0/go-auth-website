@@ -1,7 +1,7 @@
-// frontend/src/contexts/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AuthService } from '@/api/authService';
 import { User, ApiResponse } from '@/@types/auth';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -20,6 +20,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setUser(response.data);
         }
       } catch (error) {
+        console.error('Fetch user error:', error);
         setUser(null);
       } finally {
         setLoading(false);
@@ -42,6 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const response: ApiResponse<User> = await AuthService.login(email, password);
     if (response.data) {
       setUser(response.data);
+      navigate('/dashboard');
     } else {
       throw new Error(response.error || 'Login failed');
     }
@@ -49,7 +52,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const register = async (email: string, password: string, username: string) => {
     const response: ApiResponse<User> = await AuthService.register(email, password, username);
-    if (!response.data) {
+    if (response.data) {
+      navigate('/login');
+    } else {
       throw new Error(response.error || 'Registration failed');
     }
   };
@@ -57,7 +62,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     await AuthService.logout();
     setUser(null);
+    navigate('/login');
   };
+
+  if (loading) return null; // Or a loading spinner
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout, loading }}>
