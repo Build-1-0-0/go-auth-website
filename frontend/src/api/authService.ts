@@ -1,4 +1,4 @@
-// src/api/authService.ts
+// frontend/src/api/authService.ts
 import axios, { AxiosResponse } from 'axios';
 import { ApiResponse, User } from '../@types/auth';
 
@@ -11,9 +11,9 @@ const api = axios.create({
 });
 
 export class AuthService {
-  static async register(email: string, password: string): Promise<ApiResponse<User>> {
+  static async register(email: string, password: string, username: string = email.split('@')[0]): Promise<ApiResponse<User>> {
     try {
-      const response: AxiosResponse<User> = await api.post('/register', { email, password });
+      const response: AxiosResponse<User> = await api.post('/auth/register', { email, password, username });
       return { data: response.data, status: response.status };
     } catch (error: any) {
       return AuthService.handleError(error);
@@ -22,7 +22,7 @@ export class AuthService {
 
   static async login(email: string, password: string): Promise<ApiResponse<User>> {
     try {
-      const response: AxiosResponse<User> = await api.post('/login', { email, password });
+      const response: AxiosResponse<User> = await api.post('/auth/login', { email, password });
       return { data: response.data, status: response.status };
     } catch (error: any) {
       return AuthService.handleError(error);
@@ -31,7 +31,7 @@ export class AuthService {
 
   static async logout(): Promise<ApiResponse> {
     try {
-      const response = await api.post('/logout');
+      const response = await api.post('/auth/logout');
       return { status: response.status };
     } catch (error: any) {
       return AuthService.handleError(error);
@@ -40,14 +40,13 @@ export class AuthService {
 
   static async getProfile(): Promise<ApiResponse<User>> {
     try {
-      const response: AxiosResponse<User> = await api.get('/me');
+      const response: AxiosResponse<User> = await api.get('/auth/me');
       return { data: response.data, status: response.status };
     } catch (error: any) {
       return AuthService.handleError(error);
     }
   }
 
-  // Static method to handle errors
   private static handleError(error: any): ApiResponse {
     if (axios.isAxiosError(error)) {
       return {
