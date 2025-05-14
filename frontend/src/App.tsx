@@ -1,7 +1,6 @@
-// frontend/src/App.tsx
 import { Helmet, HelmetProvider } from '@dr.pogodin/react-helmet';
 import { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -19,24 +18,35 @@ const HomePage = lazy(() => import('@/pages/HomePage'));
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingSpinner fullPage />}>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </ErrorBoundary>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <Router>
+          <ErrorBoundary>
+            <Suspense fallback={<LoadingSpinner fullPage />}>
+              <Helmet>
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>MyApp</title>
+                <meta name="description" content="Welcome to MyApp, your authentication platform." />
+                <script nonce={window.__CSP_NONCE__ || ''} />
+              </Helmet>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </Router>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
