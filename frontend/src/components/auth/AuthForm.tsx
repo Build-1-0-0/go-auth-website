@@ -10,6 +10,7 @@ interface AuthFormProps {
 export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const { handleLogin, handleRegister, message } = useAuthActions();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,7 +19,7 @@ export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
       if (isLogin) {
         await handleLogin(email, password);
       } else {
-        await handleRegister(email, password);
+        await handleRegister(email, password, username);
       }
     } catch (err) {
       // Error handled by useAuthActions
@@ -41,6 +42,25 @@ export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+                className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
+                required
+              />
+            </div>
+          )}
           <div>
             <label
               htmlFor="email"
