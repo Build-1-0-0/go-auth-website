@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from '@dr.pogodin/react-helmet';
 import AuthForm from '@/components/auth/AuthForm';
 import Layout from '@/components/layout/Layout';
 
