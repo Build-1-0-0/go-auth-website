@@ -1,4 +1,3 @@
-// backend/src/index.ts
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { nanoid } from 'nanoid';
@@ -10,7 +9,7 @@ const app = new Hono<{ Bindings: Env; Variables: { nonce: string } }>();
 
 // CSP Middleware
 app.use('*', async (c, next) => {
-  const nonce = nanoid(16); // Generate secure nonce
+  const nonce = nanoid(16);
   c.set('nonce', nonce);
   await next();
   c.header(
@@ -39,7 +38,7 @@ app.use(
   cors({
     origin: ['https://go-auth-website.pages.dev', 'http://localhost:5173'],
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowHeaders: ['Content-Type', 'Authorization'],
+    allowHeaders: ['Content-Type'],
     credentials: true,
     exposeHeaders: ['Set-Cookie'],
   })
