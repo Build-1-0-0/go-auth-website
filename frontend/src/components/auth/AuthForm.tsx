@@ -16,8 +16,8 @@ export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
     if (!email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
       return 'Please enter a valid email address.';
     }
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters long.';
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long.';
     }
     if (!isLogin && username.length < 3) {
       return 'Username must be at least 3 characters long.';
@@ -77,9 +77,9 @@ export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
-                className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
                 required
                 disabled={isLoading}
+                className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
               />
             </div>
           )}
@@ -96,10 +96,9 @@ export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              className=" point of contact
-              className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
               required
               disabled={isLoading}
+              className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
             />
           </div>
           <div>
@@ -115,9 +114,9 @@ export const AuthForm = ({ isLogin = true }: AuthFormProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
               required
               disabled={isLoading}
+              className="mt-1 block w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-xs shadow-xs focus:outline-none focus:ring-3 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
             />
           </div>
           <button
