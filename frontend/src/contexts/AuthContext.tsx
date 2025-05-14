@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const response: ApiResponse<User> = await AuthService.login(email, password);
     if (response.data) {
       setUser(response.data);
-      navigate('/dashboard');
     } else {
       throw new Error(response.error || 'Login failed');
     }
@@ -52,9 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const register = async (email: string, password: string, username: string) => {
     const response: ApiResponse<User> = await AuthService.register(email, password, username);
-    if (response.data) {
-      navigate('/login');
-    } else {
+    if (!response.data) {
       throw new Error(response.error || 'Registration failed');
     }
   };
