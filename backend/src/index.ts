@@ -41,6 +41,7 @@ app.use(
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
+    exposeHeaders: ['Set-Cookie'],
   })
 );
 
@@ -48,5 +49,17 @@ app.use(
 app.get('/', (c) => c.text('API Running'));
 app.route('/auth', auth);
 app.route('/protected', protectedRoutes);
+
+// Error Handling
+app.onError((err, c) => {
+  console.error('Server error:', {
+    message: err.message,
+    stack: err.stack,
+    path: c.req.path,
+    method: c.req.method,
+    timestamp: new Date().toISOString(),
+  });
+  return c.json({ error: 'Internal server error', details: err.message }, 500);
+});
 
 export default app;
