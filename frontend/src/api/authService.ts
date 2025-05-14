@@ -10,9 +10,11 @@ export const AuthService = {
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || 'Login failed');
+      return { error: data.error || 'Login failed' };
     }
-    return data;
+    // Store sessionId in localStorage or cookies if needed
+    localStorage.setItem('sessionId', data.sessionId);
+    return { data: data.user };
   },
 
   async register(email: string, password: string, username: string): Promise<ApiResponse<User>> {
@@ -24,26 +26,40 @@ export const AuthService = {
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || 'Registration failed');
+      return { error: data.error || 'Registration failed' };
     }
-    return data;
+    return { data: data.user };
   },
 
   async getProfile(): Promise<ApiResponse<User>> {
-    const response = await fetch('/api/profile', {
+    const sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+      return { error: 'No session found' };
+    }
+    const response = await fetch(`/api/session/${sessionId}`, {
+      headers: { Authorization: `Bearer ${sessionId}` },
       credentials: 'include',
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to fetch profile');
+      return { error: data.error || 'Failed to fetch profile' };
     }
-    return data;
+    const user = await fetch(`/api/user/${data.userId}`, {
+      headers: { Authorization: `Bearer ${sessionId}` },
+      credentials: 'include',
+    }).then((res) => res.json());
+    return { data: user };
   },
 
   async logout(): Promise<void> {
-    await fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
+    const sessionId = localStorage.getItem('sessionId');
+    if (sessionId) {
+      await fetch('/api/logout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionId}` },
+        credentials: 'include',
+      });
+      localStorage.removeItem('sessionId');
+    }
   },
 };
