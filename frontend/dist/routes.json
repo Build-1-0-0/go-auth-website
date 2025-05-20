@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "routes": [
+    { "pattern": "/static/*", "serve": "/static/:splat" },
+    { "pattern": "/favicon.ico", "serve": "/favicon.ico" },
+    { "pattern": "/*",          "serve": "/index.html" }
+  ]
+}
