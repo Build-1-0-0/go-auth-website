@@ -1,16 +1,17 @@
+// frontend/src/pages/LoginPage.tsx
 import { Helmet } from '@dr.pogodin/react-helmet';
 import AuthForm from '@/components/auth/AuthForm';
-// Layout import is removed as it's no longer used directly here
+import Layout from '@/components/layout/Layout';
 
 const LoginPage: React.FC = () => {
   return (
-    <> {/* Using a Fragment as the root element */}
+    <Layout>
       <Helmet>
         <title>Login - MyApp</title>
         <meta name="description" content="Log in to your MyApp account." />
       </Helmet>
       <AuthForm isLogin={true} />
-    </>
+    </Layout>
   );
 };
 
