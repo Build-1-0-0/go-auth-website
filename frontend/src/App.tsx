@@ -11,7 +11,6 @@ export default function App() { return ( <> {/* Smoke test banner */} <div style
   <HelmetProvider>
     <AuthProvider>
       <Router>
-        {/* Suspense without ErrorBoundary to expose raw errors */}
         <Suspense fallback={<LoadingSpinner fullPage />}>
           <Helmet>
             <meta charSet="utf-8" />
