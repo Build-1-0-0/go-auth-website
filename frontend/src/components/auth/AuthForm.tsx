@@ -1,10 +1,33 @@
-import { useState } from 'react'; import { Link } from 'react-router-dom';
+import { useState } from 'react'; import { Link, useNavigate } from 'react-router-dom'; import { useAuthActions } from '@/hooks/useAuthActions';
 
 interface AuthFormProps { isLogin: boolean; }
 
-const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => { const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [username, setUsername] = useState(''); const [isLoading, setIsLoading] = useState(false); const [formError, setFormError] = useState(''); const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
+const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => { const navigate = useNavigate(); const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [username, setUsername] = useState(''); const [formError, setFormError] = useState<string | null>(null); const { handleLogin, handleRegister, message, isLoading } = useAuthActions();
 
-const handleSubmit = async (e: React.FormEvent) => { e.preventDefault(); setIsLoading(true); // Handle auth logic here... setIsLoading(false); };
+const validateForm = (): string | null => { if (!/^[\w-.]+@([\w-]+.)+[\w-]{2,4}$/.test(email)) { return 'Please enter a valid email address.'; } if (password.length < 8) { return 'Password must be at least 8 characters long.'; } if (!isLogin && username.length < 3) { return 'Username must be at least 3 characters long.'; } return null; };
+
+const handleSubmit = async (e: React.FormEvent) => { e.preventDefault(); if (isLoading) return;
+
+const validationError = validateForm();
+if (validationError) {
+  setFormError(validationError);
+  return;
+}
+setFormError(null);
+
+try {
+  if (isLogin) {
+    await handleLogin(email, password);
+  } else {
+    await handleRegister(email, password, username);
+    await handleLogin(email, password);
+  }
+  navigate('/dashboard');
+} catch (err) {
+  // Errors are handled by useAuthActions message
+}
+
+};
 
 return ( <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 fade-in"> <div className="max-w-md w-full space-y-6 p-6 bg-white dark:bg-gray-800 rounded-xs shadow-xs"> <h2 className="text-2xl font-bold text-center text-foreground"> {isLogin ? 'Login' : 'Register'} </h2>
 
