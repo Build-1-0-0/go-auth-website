@@ -1,17 +1,16 @@
-
 import { Helmet } from '@dr.pogodin/react-helmet';
 import AuthForm from '@/components/auth/AuthForm';
 
-const RegisterPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Register - MyApp</title>
-        <meta name="description" content="Create a new account to access MyApp." />
+        <title>Login - MyApp</title>
+        <meta name="description" content="Log in to your MyApp account." />
       </Helmet>
-      <AuthForm isLogin={false} />
+      <AuthForm isLogin={true} />
     </>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;
