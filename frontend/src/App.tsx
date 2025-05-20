@@ -18,6 +18,19 @@ const HomePage = lazy(() => import('@/pages/HomePage'));
 
 export default function App() {
   return (
+{/* at the very top of your JSX tree */}
+<div
+  style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    background: 'yellow',
+    padding: '4px',
+    zIndex: 9999,
+  }}
+>
+  🚀 React Loaded
+</div>
     <HelmetProvider>
       <AuthProvider>
         <Router>
