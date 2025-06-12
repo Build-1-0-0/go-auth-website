@@ -1,65 +1,55 @@
-import { User, ApiResponse } from '@/@types/auth';
+import { ApiResponse, User } from '@/@types/auth';
+
+// Helper function to handle API responses
+async function fetchApi<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
+  try {
+    const response = await fetch(`/api${url}`, { // Assuming a /api proxy prefix
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      credentials: 'include', // Important for cookies
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { error: data.error || `Request failed with status ${response.status}` };
+    }
+    return { data };
+  } catch (err) {
+    const error = err as Error;
+    return { error: error.message || 'An unknown network error occurred' };
+  }
+}
+
 
 export const AuthService = {
   async login(email: string, password: string): Promise<ApiResponse<User>> {
-    const response = await fetch('/api/login', {
+    return fetchApi<User>('/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
-      credentials: 'include',
     });
-    const data = await response.json();
-    if (!response.ok) {
-      return { error: data.error || 'Login failed' };
-    }
-    // Store sessionId in localStorage or cookies if needed
-    localStorage.setItem('sessionId', data.sessionId);
-    return { data: data.user };
   },
 
   async register(email: string, password: string, username: string): Promise<ApiResponse<User>> {
-    const response = await fetch('/api/register', {
+    return fetchApi<User>('/auth/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, username }),
-      credentials: 'include',
     });
-    const data = await response.json();
-    if (!response.ok) {
-      return { error: data.error || 'Registration failed' };
-    }
-    return { data: data.user };
   },
 
   async getProfile(): Promise<ApiResponse<User>> {
-    const sessionId = localStorage.getItem('sessionId');
-    if (!sessionId) {
-      return { error: 'No session found' };
-    }
-    const response = await fetch(`/api/session/${sessionId}`, {
-      headers: { Authorization: `Bearer ${sessionId}` },
-      credentials: 'include',
+    // A single endpoint to get the current user's profile based on their session cookie
+    return fetchApi<User>('/protected/profile', {
+      method: 'GET',
     });
-    const data = await response.json();
-    if (!response.ok) {
-      return { error: data.error || 'Failed to fetch profile' };
-    }
-    const user = await fetch(`/api/user/${data.userId}`, {
-      headers: { Authorization: `Bearer ${sessionId}` },
-      credentials: 'include',
-    }).then((res) => res.json());
-    return { data: user };
   },
 
-  async logout(): Promise<void> {
-    const sessionId = localStorage.getItem('sessionId');
-    if (sessionId) {
-      await fetch('/api/logout', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${sessionId}` },
-        credentials: 'include',
-      });
-      localStorage.removeItem('sessionId');
-    }
+  async logout(): Promise<ApiResponse<{}>> {
+    return fetchApi('/auth/logout', {
+      method: 'POST',
+    });
   },
 };
