@@ -1,15 +1,9 @@
+// frontend/src/contexts/AuthContext.tsx
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AuthService } from '@/api/authService';
-import { User, ApiResponse } from '@/@types/auth';
+import { User, AuthContextType } from '@/@types/auth'; // Import updated types
 import { useNavigate } from 'react-router-dom';
-
-interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, username: string) => Promise<void>;
-  logout: () => Promise<void>;
-  loading: boolean;
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -25,7 +19,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response: ApiResponse<User> = await AuthService.getProfile();
+        const response = await AuthService.getProfile();
         if (response.data) {
           setUser(response.data);
         }
@@ -41,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response: ApiResponse<User> = await AuthService.login(email, password);
+    const response = await AuthService.login(email, password);
     if (response.data) {
       setUser(response.data);
     } else {
@@ -49,8 +43,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  // Updated register function to accept username
   const register = async (email: string, password: string, username: string) => {
-    const response: ApiResponse<User> = await AuthService.register(email, password, username);
+    const response = await AuthService.register(email, password, username);
     if (!response.data) {
       throw new Error(response.error || 'Registration failed');
     }
@@ -62,10 +57,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     navigate('/login');
   };
 
-  if (loading) return null; // Or a loading spinner
+  const value = { user, loading, login, register, logout };
+  
+  // Return null or a global spinner while checking auth status
+  if (loading) return <LoadingSpinner fullPage />;
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
@@ -73,7 +71,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
